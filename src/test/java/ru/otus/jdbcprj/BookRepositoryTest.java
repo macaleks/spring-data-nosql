@@ -3,9 +3,12 @@ package ru.otus.jdbcprj;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.jdbcprj.model.Author;
 import ru.otus.jdbcprj.model.Book;
 import ru.otus.jdbcprj.model.Genre;
@@ -18,13 +21,14 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DataJpaTest
-public class BookRepositoryJapImplTest {
+//@ExtendWith(SpringExtension.class)
+//@DataMongoTest
+public class BookRepositoryTest extends EmbedDbInitializer{
 
     private static final int EXPECTED_NUMBER_OF_BOOKS = 3;
-    private static final String GENRE_ID = "3L";
-    private static final String AUTHOR_ID = "5L";
-    private static final String BOOK_ID = "3L";
+    private static final String GENRE_ID = "3";
+    private static final String AUTHOR_ID = "5";
+    private static final String BOOK_ID = "3";
     private static final String BOOK_NAME = "New book";
 
     @Autowired
@@ -35,7 +39,7 @@ public class BookRepositoryJapImplTest {
     GenreRepository genreRepository;
 
     @Autowired
-    TestEntityManager em;
+    MongoOperations mongoOperations;
 
     @DisplayName("Should return 3 records")
     @Test
@@ -57,14 +61,13 @@ public class BookRepositoryJapImplTest {
     @DisplayName("Update name by id")
     @Test
     public void test_update() {
-        val book = em.find(Book.class, BOOK_ID);
+        val book = mongoOperations.findById(BOOK_ID, Book.class);
         String oldName = book.getName();
-        em.detach(book);
 
         val bookToModify = bookRepo.findById(BOOK_ID).get();
         bookToModify.setName(BOOK_NAME);
         bookRepo.save(bookToModify);
-        val updatedBook = em.find(Book.class, BOOK_ID);
+        val updatedBook = mongoOperations.findById(BOOK_ID, Book.class);
 
         assertThat(updatedBook.getName()).isNotEqualTo(oldName).isEqualTo(BOOK_NAME);
     }
@@ -72,12 +75,11 @@ public class BookRepositoryJapImplTest {
     @DisplayName("Delete by id")
     @Test
     public void test_delete() {
-        val book = em.find(Book.class, BOOK_ID);
+        val book = mongoOperations.findById(BOOK_ID, Book.class);
         assertThat(book).isNotNull();
-        em.detach(book);
 
         bookRepo.deleteById(BOOK_ID);
-        val deletedBook = em.find(Book.class, BOOK_ID);
+        val deletedBook = mongoOperations.findById(BOOK_ID, Book.class);
         assertThat(deletedBook).isNull();
     }
 }

@@ -3,18 +3,21 @@ package ru.otus.jdbcprj;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import ru.otus.jdbcprj.repository.GenreRepository;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.jdbcprj.model.Genre;
+import ru.otus.jdbcprj.repository.GenreRepository;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DataJpaTest
-public class GenreRepositoryImplTest {
+@ExtendWith(SpringExtension.class)
+@DataMongoTest
+public class GenreRepositoryTest {
 
     private static final int EXPECTED_NUMBER_OF_GENRES = 9;
     private static final String GENRE_ID = "7";
