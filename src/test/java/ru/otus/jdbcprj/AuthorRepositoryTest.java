@@ -15,7 +15,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AuthorRepositoryTest extends EmbedDbInitializer {
+@ExtendWith(SpringExtension.class)
+@DataMongoTest
+public class AuthorRepositoryTest {
 
     private static final int EXPECTED_NUMBER_OF_AUTHORS = 6;
     private static final String AUTHOR_ID = "5";
@@ -26,6 +28,7 @@ public class AuthorRepositoryTest extends EmbedDbInitializer {
     @DisplayName("Should return 6 records")
     @Test
     public void test_getAll() {
+
         List<Author> authors = repo.findAll();
         assertEquals(EXPECTED_NUMBER_OF_AUTHORS, authors.size());
     }

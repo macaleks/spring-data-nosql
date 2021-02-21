@@ -13,7 +13,6 @@ import ru.otus.jdbcprj.repository.CommentRepository;
 import ru.otus.jdbcprj.repository.GenreRepository;
 
 import javax.annotation.PostConstruct;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class Main {
     @Autowired
     CommentRepository commentRepository;
 
-    public static void main(String[] args) throws InterruptedException, SQLException {
+    public static void main(String[] args) {
         SpringApplication.run(Main.class);
     }
 

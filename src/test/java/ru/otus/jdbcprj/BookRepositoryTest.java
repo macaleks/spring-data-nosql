@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.otus.jdbcprj.model.Author;
@@ -21,9 +20,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-//@ExtendWith(SpringExtension.class)
-//@DataMongoTest
-public class BookRepositoryTest extends EmbedDbInitializer{
+@ExtendWith(SpringExtension.class)
+@DataMongoTest
+public class BookRepositoryTest {
 
     private static final int EXPECTED_NUMBER_OF_BOOKS = 3;
     private static final String GENRE_ID = "3";
@@ -56,6 +55,7 @@ public class BookRepositoryTest extends EmbedDbInitializer{
         val book = new Book("0L", "Book name", author, genre);
         bookRepo.save(book);
         assertThat(book.getId()).isGreaterThan("0");
+        mongoOperations.remove(book);
     }
 
     @DisplayName("Update name by id")
@@ -81,5 +81,6 @@ public class BookRepositoryTest extends EmbedDbInitializer{
         bookRepo.deleteById(BOOK_ID);
         val deletedBook = mongoOperations.findById(BOOK_ID, Book.class);
         assertThat(deletedBook).isNull();
+        mongoOperations.save(book);
     }
 }
